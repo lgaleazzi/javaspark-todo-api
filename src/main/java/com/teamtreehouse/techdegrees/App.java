@@ -35,7 +35,7 @@ public class App {
             get("/:id", TYPE_JSON, ((request, response) -> {
                 Long id = Long.parseLong(request.params("id"));
                 Todo todo = todoDao.findById(id);
-                return null;
+                return todo;
             }), gson::toJson);
 
             after(((request, response) -> response.type(TYPE_JSON)));
