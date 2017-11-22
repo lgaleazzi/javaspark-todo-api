@@ -37,7 +37,7 @@ public class TodoServiceImpl implements TodoService
         Todo todo = todoDao.findById(idLong);
         if (todo == null)
         {
-            throw new ApiError(404, "Sorry, we couldn't find this todo");
+            throw new ApiError(404, "Sorry, we couldn't find a todo with id " + idLong);
         }
         return todo;
     }
@@ -54,7 +54,7 @@ public class TodoServiceImpl implements TodoService
         Long idLong = convertToLong(id);
         if (todoDao.findById(idLong) == null)
         {
-            throw new ApiError(404, "Sorry, we couldn't find this todo");
+            throw new ApiError(404, "Sorry, we couldn't find a todo with id " + idLong);
         }
         todoDao.delete(idLong);
     }
@@ -67,7 +67,7 @@ public class TodoServiceImpl implements TodoService
             return id;
         } catch (NumberFormatException e)
         {
-            throw new ApiError(400, "This is not a valid id");
+            throw new ApiError(400, stringId + " is not a valid id");
         }
 
     }
