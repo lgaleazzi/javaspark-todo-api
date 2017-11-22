@@ -1,10 +1,13 @@
 package com.teamtreehouse.techdegrees.model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class Todo
 {
     private Long id;
     private String name;
+    @SerializedName(value = "completed")
     private boolean isCompleted;
 
     public Todo(String name, boolean isCompleted)
