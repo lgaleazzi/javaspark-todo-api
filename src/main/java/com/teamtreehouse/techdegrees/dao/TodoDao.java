@@ -14,4 +14,6 @@ public interface TodoDao
     Todo findById(Long id);
 
     void update(Todo todo);
+
+    void delete(Long id);
 }

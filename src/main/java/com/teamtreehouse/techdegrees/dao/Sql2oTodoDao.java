@@ -71,6 +71,28 @@ public class Sql2oTodoDao implements TodoDao
                     .addParameter("name", todo.getName())
                     .addParameter("is_completed", todo.isCompleted())
                     .executeUpdate();
+        } catch (Sql2oException e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(Long id)
+    {
+        try (Connection connection = sql2o.open())
+        {
+            connection.createQuery("DELETE FROM todo WHERE id = :id")
+                    .addParameter("id", id)
+                    .executeUpdate();
+
+        } catch (Sql2oException e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
+            e.printStackTrace();
         }
     }
 

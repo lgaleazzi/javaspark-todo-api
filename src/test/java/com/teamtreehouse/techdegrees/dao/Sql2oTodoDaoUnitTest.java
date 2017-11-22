@@ -86,6 +86,17 @@ public class Sql2oTodoDaoUnitTest
         assertEquals(true, persistedTodo.isCompleted());
     }
 
+    @Test
+    public void deleteTodo() throws Exception
+    {
+        Todo todo = getTodo1();
+        dao.add(todo);
+
+        dao.delete(todo.getId());
+
+        assertEquals(0, dao.findAll().size());
+    }
+
     private Todo getTodo1()
     {
         return new Todo("Go Shopping", false);
