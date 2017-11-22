@@ -2,8 +2,6 @@ package com.teamtreehouse.techdegrees;
 
 
 import com.google.gson.Gson;
-import com.teamtreehouse.techdegrees.dao.Sql2oTodoDao;
-import com.teamtreehouse.techdegrees.dao.TodoDao;
 import com.teamtreehouse.techdegrees.exception.ApiError;
 import com.teamtreehouse.techdegrees.model.Todo;
 import com.teamtreehouse.techdegrees.service.TodoService;
@@ -17,7 +15,6 @@ import static spark.Spark.*;
 
 public class App {
     private final static String TYPE_JSON = "application/json";
-    private static TodoDao todoDao;
 
     public static void main(String[] args) {
         staticFileLocation("/public");
@@ -34,9 +31,7 @@ public class App {
 
         Sql2o sql2o = new Sql2o(datasource + ";INIT=RUNSCRIPT from 'classpath:db/init.sql'", "", "");
         TodoService todoService = new TodoServiceImpl(sql2o);
-        todoDao = new Sql2oTodoDao(sql2o);
         Gson gson = new Gson();
-
 
 
         path("/api/v1", () -> {
@@ -73,8 +68,7 @@ public class App {
                 return "";
             }), gson::toJson);
 
-            exception(ApiError.class, (e, request, response) -> {
-                ApiError error = (ApiError) e;
+            exception(ApiError.class, (error, request, response) -> {
                 Map<String, Object> jsonMap = new HashMap<>();
                 jsonMap.put("status", error.getStatus());
                 jsonMap.put("errorMessage", error.getMessage());
