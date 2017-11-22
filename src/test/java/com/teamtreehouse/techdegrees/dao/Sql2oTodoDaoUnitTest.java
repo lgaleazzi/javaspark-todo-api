@@ -34,7 +34,7 @@ public class Sql2oTodoDaoUnitTest
     @Test
     public void addingTodoId() throws Exception
     {
-        Todo todo = new Todo("Go Shopping", false);
+        Todo todo = getTodo1();
         Long originalId = todo.getId();
 
         dao.add(todo);
@@ -45,8 +45,8 @@ public class Sql2oTodoDaoUnitTest
     @Test
     public void findAllReturnsAllTodos() throws Exception
     {
-        Todo todo1 = new Todo("Go Shopping", false);
-        Todo todo2 = new Todo("Clean house", true);
+        Todo todo1 = getTodo1();
+        Todo todo2 = getTodo2();
 
         dao.add(todo1);
         dao.add(todo2);
@@ -58,6 +58,27 @@ public class Sql2oTodoDaoUnitTest
     public void noTodosReturnsEmptyList() throws Exception
     {
         assertEquals(0, dao.findAll().size());
+    }
+
+    @Test
+    public void findByIdReturnsCorrectTodo() throws Exception
+    {
+        Todo todo = getTodo1();
+        dao.add(todo);
+
+        Todo foundById = dao.findById(todo.getId());
+
+        assertEquals(todo, foundById);
+    }
+
+    private Todo getTodo1()
+    {
+        return new Todo("Go Shopping", false);
+    }
+
+    private Todo getTodo2()
+    {
+        return new Todo("Clean house", true);
     }
 
 }
