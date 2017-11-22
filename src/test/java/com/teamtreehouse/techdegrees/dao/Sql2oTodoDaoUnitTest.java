@@ -54,4 +54,10 @@ public class Sql2oTodoDaoUnitTest
         assertEquals(2, dao.findAll().size());
     }
 
+    @Test
+    public void noTodosReturnsEmptyList() throws Exception
+    {
+        assertEquals(0, dao.findAll().size());
+    }
+
 }
