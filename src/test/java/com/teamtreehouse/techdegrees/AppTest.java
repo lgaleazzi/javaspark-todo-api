@@ -63,12 +63,16 @@ public class AppTest
     @Test
     public void addingTodoReturnsStatusCreated() throws Exception
     {
+        Todo expected = todo1();
         Map<String, String> values = new HashMap<>();
         values.put("name", "Go Shopping");
         values.put("completed", "false");
 
         ApiResponse response = client.request("POST", PATH + "/todos", gson.toJson(values));
+        Todo retrieved = gson.fromJson(response.getBody(), Todo.class);
 
+        assertEquals(expected.getName(), retrieved.getName());
+        assertEquals(expected.isCompleted(), retrieved.isCompleted());
         assertEquals(201, response.getStatus());
     }
 
@@ -118,7 +122,6 @@ public class AppTest
         todoDao.add(todo);
 
         Todo expected = new Todo("Go Shopping", true);
-        expected.setId(todo.getId());
 
         Map<String, String> values = new HashMap<>();
         values.put("id", "1");
@@ -129,8 +132,9 @@ public class AppTest
         ApiResponse response = client.request("PUT", PATH + "/todos/" + todo.getId(), gson.toJson(values));
         Todo retrieved = gson.fromJson(response.getBody(), Todo.class);
 
+        assertEquals(expected.getName(), retrieved.getName());
+        assertEquals(expected.isCompleted(), retrieved.isCompleted());
         assertEquals(200, response.getStatus());
-        assertEquals(expected, retrieved);
     }
 
     @Test
@@ -154,8 +158,8 @@ public class AppTest
 
         ApiResponse response = client.request("DELETE", PATH + "/todos/" + todo.getId());
 
-        assertEquals(200, response.getStatus());
         assertEquals(null, todoDao.findById(todo.getId()));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
