@@ -48,4 +48,16 @@ public class Sql2oTodoDao implements TodoDao
                     .executeAndFetch(Todo.class);
         }
     }
+
+    @Override
+    public Todo findById(Long id)
+    {
+        try (Connection connection = sql2o.open())
+        {
+            return connection.createQuery("SELECT * FROM todo WHERE id = :id")
+                    .addColumnMapping("is_completed", "isCompleted")
+                    .addParameter("id", id)
+                    .executeAndFetchFirst(Todo.class);
+        }
+    }
 }

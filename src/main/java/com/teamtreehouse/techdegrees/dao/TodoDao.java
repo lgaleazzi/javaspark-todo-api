@@ -10,4 +10,6 @@ public interface TodoDao
     void add(Todo todo) throws DaoException;
 
     List<Todo> findAll();
+
+    Todo findById(Long id);
 }
