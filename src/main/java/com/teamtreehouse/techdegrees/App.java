@@ -14,10 +14,22 @@ public class App {
 
     public static void main(String[] args) {
         staticFileLocation("/public");
+        String datasource = "jdbc:h2:~/todos.db";
 
-        Sql2o sql2o = new Sql2o("jdbc:h2:~/todos.db;INIT=RUNSCRIPT from 'classpath:db/init.sql'", "", "");
+        if (args.length == 2)
+        {
+            port(Integer.parseInt(args[0]));
+            datasource = args[1];
+        } else if (args.length > 0)
+        {
+            System.out.println("java App <port> <datasource>");
+        }
+
+        Sql2o sql2o = new Sql2o(datasource + ";INIT=RUNSCRIPT from 'classpath:db/init.sql'", "", "");
         TodoDao todoDao = new Sql2oTodoDao(sql2o);
         Gson gson = new Gson();
+
+
 
         path("/api/v1", () -> {
             get("/todos", TYPE_JSON,
