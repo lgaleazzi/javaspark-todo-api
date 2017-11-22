@@ -22,21 +22,27 @@ public class App {
         get("/blah", (req, res) -> "Hello!");
 
         path("/api/v1", () -> {
-            post("/", TYPE_JSON, (request, response) -> {
+            post("/todos", TYPE_JSON, (request, response) -> {
                 Todo todo = gson.fromJson(request.body(), Todo.class);
                 todoDao.add(todo);
                 response.status(201);
                 return todo;
             }, gson::toJson);
 
-            get("/", TYPE_JSON,
+            get("/todos", TYPE_JSON,
                     (request, response) -> todoDao.findAll(), gson::toJson);
 
-            get("/:id", TYPE_JSON, ((request, response) -> {
+            get("/todos/:id", TYPE_JSON, ((request, response) -> {
                 Long id = Long.parseLong(request.params("id"));
                 Todo todo = todoDao.findById(id);
                 return todo;
             }), gson::toJson);
+
+            put("todos/:id", TYPE_JSON, ((request, response) -> {
+                Todo todo = gson.fromJson(request.body(), Todo.class);
+                todoDao.update(todo);
+                return todo;
+            }));
 
             after(((request, response) -> response.type(TYPE_JSON)));
         });

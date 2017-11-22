@@ -71,6 +71,21 @@ public class Sql2oTodoDaoUnitTest
         assertEquals(todo, foundById);
     }
 
+    @Test
+    public void updateTodo() throws Exception
+    {
+        Todo todo = getTodo1();
+        dao.add(todo);
+
+        todo.setName("Updated name");
+        todo.setCompleted(true);
+        dao.update(todo);
+
+        Todo persistedTodo = dao.findById(todo.getId());
+        assertEquals("Updated name", persistedTodo.getName());
+        assertEquals(true, persistedTodo.isCompleted());
+    }
+
     private Todo getTodo1()
     {
         return new Todo("Go Shopping", false);

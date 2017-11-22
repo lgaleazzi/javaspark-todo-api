@@ -60,4 +60,19 @@ public class Sql2oTodoDao implements TodoDao
                     .executeAndFetchFirst(Todo.class);
         }
     }
+
+    @Override
+    public void update(Todo todo)
+    {
+        try (Connection connection = sql2o.open())
+        {
+            connection.createQuery("UPDATE todo SET name = :name, is_completed = :is_completed WHERE id = :id")
+                    .addParameter("id", todo.getId())
+                    .addParameter("name", todo.getName())
+                    .addParameter("is_completed", todo.isCompleted())
+                    .executeUpdate();
+        }
+    }
+
+
 }
