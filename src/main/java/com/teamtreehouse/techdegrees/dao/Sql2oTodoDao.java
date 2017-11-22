@@ -32,9 +32,7 @@ public class Sql2oTodoDao implements TodoDao
             todo.setId(id);
         } catch (Sql2oException e)
         {
-            System.out.println(e.getMessage());
-            System.out.println(e.getCause());
-            e.printStackTrace();
+            throw new DaoException(e, "Error creating new todo");
         }
     }
 
@@ -73,9 +71,7 @@ public class Sql2oTodoDao implements TodoDao
                     .executeUpdate();
         } catch (Sql2oException e)
         {
-            System.out.println(e.getMessage());
-            System.out.println(e.getCause());
-            e.printStackTrace();
+            throw new DaoException(e, "Error updating todo with id " + todo.getId());
         }
     }
 
@@ -90,9 +86,7 @@ public class Sql2oTodoDao implements TodoDao
 
         } catch (Sql2oException e)
         {
-            System.out.println(e.getMessage());
-            System.out.println(e.getCause());
-            e.printStackTrace();
+            throw new DaoException(e, "Error deleting todo with id " + id);
         }
     }
 
