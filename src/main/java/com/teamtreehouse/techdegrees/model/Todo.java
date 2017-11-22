@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 public class Todo
 {
     private Long id;
+    @SerializedName("name")
     private String name;
-    @SerializedName(value = "completed")
+    @SerializedName("completed")
     private boolean isCompleted;
 
     public Todo(String name, boolean isCompleted)
@@ -68,5 +69,15 @@ public class Todo
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Todo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isCompleted=" + isCompleted +
+                '}';
     }
 }
