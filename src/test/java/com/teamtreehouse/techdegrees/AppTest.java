@@ -1,6 +1,7 @@
 package com.teamtreehouse.techdegrees;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.teamtreehouse.techdegrees.dao.Sql2oTodoDao;
 import com.teamtreehouse.techdegrees.dao.TodoDao;
 import com.teamtreehouse.techdegrees.model.Todo;
@@ -11,10 +12,13 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import spark.Spark;
 
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.teamtreehouse.techdegrees.testutils.TodoObjects.todo1;
+import static com.teamtreehouse.techdegrees.testutils.TodoObjects.*;
 import static org.junit.Assert.*;
 
 public class AppTest
@@ -69,7 +73,26 @@ public class AppTest
     }
 
     @Test
-    public void findTodoById() throws Exception
+    public void findAllReturnsAllTodos() throws Exception
+    {
+        Todo todo1 = todo1();
+        Todo todo2 = todo2();
+        List<Todo> allTodos = Arrays.asList(
+                todo1,
+                todo2
+        );
+        allTodos.forEach(todoDao::add);
+
+        ApiResponse response = client.request("GET", PATH + "/todos");
+        Type todoListType = new TypeToken<List<Todo>>() {}.getType();
+        List<Todo> retrieved = gson.fromJson(response.getBody(), todoListType);
+
+        assertTrue(retrieved.contains(todo1));
+        assertTrue(retrieved.contains(todo2));
+    }
+
+    @Test
+    public void findTodoByIdReturnsTodo() throws Exception
     {
         Todo todo = todo1();
         todoDao.add(todo);
@@ -84,6 +107,61 @@ public class AppTest
     public void missingTodoReturnsNotFound() throws Exception
     {
         ApiResponse response = client.request("GET", PATH + "/todos/42");
+
+        assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    public void updateReturnsStatusSuccess() throws Exception
+    {
+        Todo todo = todo1();
+        todoDao.add(todo);
+
+        Todo expected = new Todo("Go Shopping", true);
+        expected.setId(todo.getId());
+
+        Map<String, String> values = new HashMap<>();
+        values.put("id", "1");
+        values.put("name", "Go Shopping");
+        values.put("completed", "true");
+
+
+        ApiResponse response = client.request("PUT", PATH + "/todos/" + todo.getId(), gson.toJson(values));
+        Todo retrieved = gson.fromJson(response.getBody(), Todo.class);
+
+        assertEquals(200, response.getStatus());
+        assertEquals(expected, retrieved);
+    }
+
+    @Test
+    public void updateMissingReturnsNotFound() throws Exception
+    {
+        Map<String, String> values = new HashMap<>();
+        values.put("id", "42");
+        values.put("name", "Go Shopping");
+        values.put("completed", "false");
+
+        ApiResponse response = client.request("PUT", PATH + "/todos/42", gson.toJson(values));
+
+        assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    public void deleteReturnsStatusSuccess() throws Exception
+    {
+        Todo todo = todo1();
+        todoDao.add(todo);
+
+        ApiResponse response = client.request("DELETE", PATH + "/todos/" + todo.getId());
+
+        assertEquals(200, response.getStatus());
+        assertEquals(null, todoDao.findById(todo.getId()));
+    }
+
+    @Test
+    public void deleteMissingReturnsNotFound() throws Exception
+    {
+        ApiResponse response = client.request("DELETE", PATH + "/todos/42");
 
         assertEquals(404, response.getStatus());
     }

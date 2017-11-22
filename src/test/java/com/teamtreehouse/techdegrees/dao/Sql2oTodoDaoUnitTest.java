@@ -34,7 +34,7 @@ public class Sql2oTodoDaoUnitTest
     }
 
     @Test
-    public void addingTodoId() throws Exception
+    public void addingTodoReturnsCorrectId() throws Exception
     {
         Todo todo = todo1();
         Long originalId = todo.getId();
@@ -74,7 +74,7 @@ public class Sql2oTodoDaoUnitTest
     }
 
     @Test
-    public void updateTodo() throws Exception
+    public void updatePersistUpdatedTodo() throws Exception
     {
         Todo todo = todo1();
         dao.add(todo);
@@ -89,7 +89,7 @@ public class Sql2oTodoDaoUnitTest
     }
 
     @Test
-    public void deleteTodo() throws Exception
+    public void deleteRemovesTodo() throws Exception
     {
         Todo todo = todo1();
         dao.add(todo);
