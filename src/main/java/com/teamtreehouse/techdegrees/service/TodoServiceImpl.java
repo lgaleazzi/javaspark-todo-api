@@ -18,6 +18,11 @@ public class TodoServiceImpl implements TodoService
         this.todoDao = new Sql2oTodoDao(sql2o);
     }
 
+    public TodoServiceImpl(TodoDao todoDao)
+    {
+        this.todoDao = todoDao;
+    }
+
     @Override
     public void add(Todo todo)
     {
